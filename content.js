@@ -35,7 +35,7 @@ async function addNewBookmarkHandler(){
     })
 }
 
-function extractUniqueId(){
+function extractUniqueId(url){
         const start = url.indexOf("problems/") + "problems/".length;
         const end = url.indexOf("?", start);
         return url.substring(start, end);   
