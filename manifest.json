@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Problem Tracker",
-    "version": "0.1 ",
+    "version": "0.1",
     "author": "Deepali Saini",
     "description": "A chrome extension that helps us to keep a track of coding problems.",
     "permissions": [
