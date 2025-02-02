@@ -18,7 +18,7 @@ async function addNewBookmarkHandler(){
     const currentBookmarks = await getCurrentBookmarks();  
     const problemurl = window.location.href;
     const uniqueId = extractUniqueId(problemurl); 
-    const problemName = document.getElementsByClassName("Header_resource_heading_cpRp1")[0].innerText;
+    const problemName = document.querySelector("h4.problem_heading").textContent
 
     if(currentBookmarks.some((bookmark) => bookmark.id === uniqueId)) return;
 
