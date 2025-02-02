@@ -1,16 +1,17 @@
 {
     "manifest_version": 3,
-    "name": "Your Chrome Extension Name",
-    "version": "0.1",
-    "author": "First Last",
-    "description": "A description about your Chrome Extension...",
+    "name": "Problem Tracker",
+    "version": "0.1.0 ",
+    "author": "Deepali Saini",
+    "description": "A chrome extension that helps us to keep a track of coding problems.",
     "permissions": [
-      ""
+      "storage",
+      "tabs"
     ],
     "content_scripts": [
       {
         "matches": [
-          "<all_urls>"
+          "https://maang.in/problems/*"
         ],
         "js": [
           "content.js"
@@ -22,18 +23,25 @@
     },
     "web_accessible_resources" : [
       {
-        "resources": [],
+        "resources": [
+          "Assets/bookmark.png",
+          "Assets/delete.png",
+          "Assets/edit.png",
+          "Assets/ext-icon.png",
+          "Assets/play.png",
+          "Assets/save.png"
+        ],
         "matches" : ["<all_urls>"]
       }
     ],
     "action": {
       "default_icon": {
-        "16": "logo.png",
-        "24": "logo.png",
-        "32": "logo.png"
+        "16": "assets/ext-icon.png",
+        "24": "assets/ext-icon.png",
+        "32": "assets/ext-icon.png"
       },
-      "default_popup": "index.html",
-      "default_title": "A tooltip popup description when you hover over the Chrome Extension icon."
+      "default_popup": "popup.html",
+      "default_title": "Problem Tracker"
     }
   }
   
