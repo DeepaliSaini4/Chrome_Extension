@@ -1,31 +1,19 @@
-// Handles frontend UI logic
-// Contains the logic for the popup
-
-const AZ_PROBLEM_KEY = "PROBLEM_KEY";
-
-const assetsURLMap = {
-  play: chrome.runtime.getURL("assets/play.png"),
-  delete: chrome.runtime.getURL("assets/delete.png"),
-};
-
 const bookmarkSection = document.getElementById("bookmarks");
 
-// Whenever you open it, fetch the bookmarks from the storage and add it to the popup
+// Fetch bookmarks when the popup is loaded
 document.addEventListener("DOMContentLoaded", () => {
   chrome.storage.sync.get([PROBLEM_KEY], (data) => {
-    const currentBookmarks = data[PROBLEM_KEY] || []; // if not present, return empty array
+    const currentBookmarks = data[PROBLEM_KEY] || [];
     viewBookmarks(currentBookmarks);
   });
 });
 
 function viewBookmarks(bookmarks) {
-  // We're refreshing all the bookmarks, so make sure to clear up the entire area before adding all the new bookmarks
-  // Otherwise, it'll might add things again and again
-  // So, always clear this things first (bcoz we're going to fill it from scratch)
   bookmarkSection.innerHTML = "";
 
   if (bookmarks.length === 0) {
     bookmarkSection.innerHTML = "<i>No bookmarks to show</i>";
+    return;
   }
 
   bookmarks.forEach((bookmark) => addNewBookmark(bookmark));
@@ -40,13 +28,11 @@ function addNewBookmark(bookmark) {
   bookmarkTitle.classList.add("bookmark-title");
 
   setControlAttributes(assetsURLMap["play"], onPlay, bookmarkControls);
-  setControlAttributes(assetsURLMap["delete"], onDelete, bookmarkControls);
+  setControlAttributes(assetsURLMap["delete"], (event) => onDelete(event, bookmark.id), bookmarkControls);
   bookmarkControls.classList.add("bookmark-controls");
 
   newBookmark.classList.add("bookmark");
-
-  newBookmark.append(bookmarkTitle);
-  newBookmark.append(bookmarkControls);
+  newBookmark.append(bookmarkTitle, bookmarkControls);
 
   newBookmark.setAttribute("url", bookmark.url);
   newBookmark.setAttribute("bookmark-id", bookmark.id);
@@ -58,33 +44,27 @@ function setControlAttributes(src, handler, parentDiv) {
   const controlElement = document.createElement("img");
   controlElement.src = src;
   controlElement.addEventListener("click", handler);
-
   parentDiv.appendChild(controlElement);
 }
 
 function onPlay(event) {
-  const bookmarkItem = event.target.parentNode.parentNode;
-  const problemUrl = bookmarkItem.getAttribute("url"); // get url from bookmarkItem (outer div)
-  window.open(problemUrl, "_blank"); // open url in a new tab
+  const bookmarkItem = event.target.closest(".bookmark");
+  const problemUrl = bookmarkItem.getAttribute("url");
+  window.open(problemUrl, "_blank");
 }
 
-function onDelete(event) {
-  const bookmarkItem = event.target.parentNode.parentNode;
-  const idToRemove = bookmarkItem.getAttribute("bookmark-id");
+function onDelete(event, bookmarkId) {
+  const bookmarkItem = event.target.closest(".bookmark");
   bookmarkItem.remove();
 
-  // Only getting deleted from current instance of popup
-  // It's not getting deleted from chrome's storage
-  // So we need to delete it from chrome's storage as well
-  deleteItemFromStorage(idToRemove);
-}
-
-function deleteItemFromStorage(idToRemove) {
+  // Update storage after deletion
   chrome.storage.sync.get([PROBLEM_KEY], (data) => {
     const currentBookmarks = data[PROBLEM_KEY] || [];
     const updatedBookmarks = currentBookmarks.filter(
-      (bookmark) => bookmark.id !== idToRemove
+      (bookmark) => bookmark.id !== bookmarkId
     );
-    chrome.storage.sync.set({PROBLEM_KEY: updatedBookmarks });
+    chrome.storage.sync.set({ [PROBLEM_KEY]: updatedBookmarks }, () => {
+      console.log("Bookmark deleted from storage.");
+    });
   });
 }
