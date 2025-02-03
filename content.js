@@ -2,8 +2,8 @@
 // Contains scripts that run directly on the webpages you visit
 // Allows the extension to interact with and modify the DOM of those pages
 
-const bookmarkImgURL = chrome.runtime.getURL("assets/bookmark.png");
-const AZ_PROBLEM_KEY = "AZ_PROBLEM_KEY";
+const bookmarkImgURL = chrome.runtime.getURL("Assets/bookmark.png");
+const PROBLEM_KEY = "PROBLEM_KEY";
 
 // Mutation observer is observing any changes that are happening inside our body,
 // including children and entire subtree of that body 
@@ -58,8 +58,8 @@ async function addNewBookmarkHandler() {
   const currentBookmarks = await getCurrentBookmarks();
 
   // Get the current problem URL and extract a unique identifier from it
-  const azProblemUrl = window.location.href;
-  const uniqueId = extractUniqueId(azProblemUrl);
+  const ProblemUrl = window.location.href;
+  const uniqueId = extractUniqueId(ProblemUrl);
   const problemName = document.querySelector("h4.problem_heading").textContent;
 
   // If the problem is already bookmarked, exit to prevent duplicates
@@ -69,14 +69,14 @@ async function addNewBookmarkHandler() {
   const bookmarkObject = {
     id: uniqueId,
     name: problemName,
-    url: azProblemUrl,
+    url: ProblemUrl,
   };
 
   // Add the new bookmark to the existing list
   const updatedBookmarks = [...currentBookmarks, bookmarkObject];
 
   // Save the updated bookmarks list back to Chrome's sync storage
-  chrome.storage.sync.set({ AZ_PROBLEM_KEY: updatedBookmarks }, () => {
+  chrome.storage.sync.set({ PROBLEM_KEY: updatedBookmarks }, () => {
     console.log("Bookmarks updated successfully:", updatedBookmarks);
   });
 }
@@ -95,9 +95,9 @@ function extractUniqueId(url) {
 function getCurrentBookmarks() {
   // Retrieves the current list of bookmarks stored in Chrome's sync storage
   return new Promise((resolve) => {
-    chrome.storage.sync.get([AZ_PROBLEM_KEY], (results) => {
+    chrome.storage.sync.get([PROBLEM_KEY], (results) => {
       // If no bookmarks exist, return an empty array
-      resolve(results[AZ_PROBLEM_KEY] || []);
+      resolve(results[PROBLEM_KEY] || []);
     });
   });
 }
