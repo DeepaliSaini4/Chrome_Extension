@@ -4,8 +4,8 @@
 const AZ_PROBLEM_KEY = "PROBLEM_KEY";
 
 const assetsURLMap = {
-  play: chrome.runtime.getURL("Assets/play.png"),
-  delete: chrome.runtime.getURL("Assets/delete.png"),
+  play: chrome.runtime.getURL("assets/play.png"),
+  delete: chrome.runtime.getURL("assets/delete.png"),
 };
 
 const bookmarkSection = document.getElementById("bookmarks");
