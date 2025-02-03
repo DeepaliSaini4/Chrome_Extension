@@ -36,9 +36,9 @@
     ],
     "action": {
       "default_icon": {
-        "16": "assets/ext-icon.png",
-        "24": "assets/ext-icon.png",
-        "32": "assets/ext-icon.png"
+        "16": "Assets/ext-icon.png",
+        "24": "Assets/ext-icon.png",
+        "32": "Assets/ext-icon.png"
       },
       "default_popup": "popup.html",
       "default_title": "Problem Tracker"
